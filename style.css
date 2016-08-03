@@ -1,0 +1,9 @@
+.dateselect{
+	width:350px;height:50px;margin:0 auto;
+}
+button{
+	width:60px;height:30px;cursor: pointer;color: White;background: #4490f7;text-decoration: none;margin-top: 10px; border-radius: 5px;opacity: 0.8;
+}
+.main{
+	width: 850px;height:650px; float:left;margin: 0 40px;
+}

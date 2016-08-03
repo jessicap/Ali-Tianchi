@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>ECharts</title>
+    <!-- 引入 echarts.js -->
+    <script src="echarts.js"></script>
+    <script src="shandong.js"></script>
+    <script src="shine.js"></script>
+     <script src="china.js"></script>
+</head>
+<body>
+    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+    <div id="main" style="width: 1000px;height:800px;"></div>
+    <script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+       
+var chart = echarts.init(document.getElementById('main'),'shine');
+option = null;
+ var geoCoordMap = {
+    "科干所":[116.988,36.6114],
+    "农科所":[116.93,36.67],
+    "开发区":[117.114,36.6739],
+    "济南化工厂":[116.989,36.6872],
+    "省种子仓库":[117.0684,36.6868]
+};
+var test=[
+                {name: "科干所", value: 9},
+                {name: "农科所", value: 12},
+                {name: "开发区", value: 12},
+                {name: "济南化工厂", value: 12},
+                {name: "省种子仓库", value: 279}
+            ];
+var convertData = function (data) {
+    var res = [];
+    for (var i = 0; i < data.length; i++) {
+        var geoCoord = geoCoordMap[data[i].name];
+        if (geoCoord) {
+            res.push({
+                name: data[i].name,
+                value: geoCoord.concat(data[i].value)
+            });
+        }
+    }
+    return res;
+};
+
+
+chart.setOption({
+    baseOption:{
+         timeline: {
+            // y: 0,
+            axisType: 'category',
+            // realtime: false,
+            // loop: false,
+            autoPlay: false,
+            // currentIndex: 2,
+            playInterval: 1000,
+            // controlStyle: {
+            //     position: 'left'
+            // },
+            bottom:20,
+            lineStyle:{
+                color:'#fff'
+            },
+             controlStyle:{
+                  normal:{
+                        borderColor:'#fff',
+                        color:'#fff'
+                    
+                }
+             },
+                data: [
+                '1','2','3',
+                {
+                    value: '4',
+                    tooltip: {
+                        formatter: '{b} GDP达到一个高度'
+                    },
+                    symbol: 'diamond',
+                    symbolSize: 16
+                },
+                '5', '6','7','8','9',
+                {
+                    value: '10',
+                    tooltip: {
+                        formatter: function (params) {
+                            return params.name + 'GDP达到又一个高度';
+                        }
+                    },
+                    symbol: 'diamond',
+                    symbolSize: 18
+                },'11','12','13','14','15','16','17','18','19','20','21','22','23','24'
+            ],
+            label: {
+                formatter : function(s) {
+                    return s;
+                },
+                normal:{
+                    textStyle:{
+                        color:'#fff'
+                    }
+                }
+            }
+        },
+        backgroundColor:'#404a59',
+        title: {
+        text: '全国主要城市空气质量',
+        subtext: 'data from PM25.in',
+        sublink: 'http://www.pm25.in',
+        x:'center',
+        textStyle: {
+            color: '#fff'
+        }
+    },
+    tooltip: {
+        trigger: 'item',
+        formatter: function (params) {
+            return params.name + ' : ' + params.value[2];
+        }
+    },
+    legend: {
+        orient: 'vertical',
+        y: 'top',
+        x:'right',
+        data:['pm2.5','SO2','pm10'],
+        textStyle: {
+            color: '#fff'
+        },
+        selectedMode: 'single',
+       
+    },
+    dataRange: {
+        min: 0,
+        max: 200,
+        calculable: true,
+        color: ['#d94e5d','#eac736','#50a3ba'],
+        textStyle: {
+            color: '#fff'
+        }
+    },
+    geo: {
+        map: '山东',
+        roam:true,
+        label: {
+            emphasis: {
+                show: true,
+                textStyle : {
+                    color : '#28c6de',
+                    fontSize:20
+                    }
+            }
+        },
+        itemStyle: {
+            normal: {
+                areaColor: '#323c48',
+                borderColor: '#111'
+            },
+            emphasis: {
+                areaColor: '#2a333d'
+            }
+        }
+    },
+    series: [
+        {
+            name: 'pm2.5',
+            type: 'scatter',
+            coordinateSystem: 'geo',
+            roam: true,
+            data: convertData(test),
+            symbolSize: 5,
+            label: {
+                normal: {
+                    show: false
+                },
+                emphasis: {
+                    show: false
+                }
+            },
+            itemStyle: {
+                emphasis: {
+                    borderColor: '#fff',
+                    borderWidth: 1
+                }
+            }
+        },
+        {
+            name: 'SO2',
+            type: 'scatter',
+            coordinateSystem: 'geo',
+            roam: true,
+             data: convertData([
+                {name: "科干所", value: 19},
+                {name: "农科所", value: 122},
+                {name: "开发区", value: 142},
+                {name: "济南化工厂", value: 12},
+                {name: "省种子仓库", value: 279}
+            ]),
+            symbolSize: 5,
+            label: {
+                normal: {
+                    show: false
+                },
+                emphasis: {
+                    show: false
+                }
+            },
+            itemStyle: {
+                emphasis: {
+                    borderColor: '#fff',
+                    borderWidth: 1
+                }
+            }
+        },
+        {
+            name: 'pm10',
+            type: 'scatter',
+            coordinateSystem: 'geo',
+            roam: true,
+             data: convertData([
+                {name: "科干所", value: 19},
+                {name: "农科所", value: 122},
+                {name: "开发区", value: 142},
+                {name: "济南化工厂", value: 12},
+                {name: "省种子仓库", value: 279}
+            ]),
+            symbolSize: 5,
+            label: {
+                normal: {
+                    show: false
+                },
+                emphasis: {
+                    show: false
+                }
+            },
+            itemStyle: {
+                emphasis: {
+                    borderColor: '#fff',
+                    borderWidth: 1
+                }
+            }
+        }
+    ]
+    }
+
+
+ });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//chart.setOption({
+//    series: [{
+  //      type: 'map',
+   //     map: '江苏'
+   // }]
+//});
+        
+        // 使用刚指定的配置项和数据显示图表。
+   //chart.setOption(option);
+
+       
+    </script>
+</body>
+</html>

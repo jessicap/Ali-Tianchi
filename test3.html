@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>ECharts</title>
+    <link rel="stylesheet" href="style.css"/>
+    <!-- 引入 echarts.js -->
+    <script src="jquery.js"></script>
+    <script src="echarts.js"></script>
+    <script src="shandong.js"></script>
+    <script src="jiangsu.js"></script>
+     <script src="china.js"></script>
+     <script src="test.js"></script>
+     <script src="shine.js"></script>
+</head>
+<body>
+    <div class="dateselect">
+    <label>请选择日期</label>
+     <input type="date" name="starttime" id="date" min="2015-01-02" max="2015-01-31" />
+                    <button onclick="datebtn()" >确定</button>
+     </div>
+    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+    <div id="mainSD" class="main" ></div>
+     <div id="mainJS" class="main" ></div>
+   
+        
+
+
+  
+    <script type="text/javascript">
+   function datebtn () {
+
+       var datetime=$("#date").val();
+       if(datetime==""||datetime==null){
+        alert("请选择日期");
+       }else{
+    
+  var b=datetime.replace('2015-01-','');
+  console.log(b);
+ // return parseInt(b[0]); 
+ drawSD(parseInt(b[0]));
+  drawJS(parseInt(b[0]));
+    }
+           
+       }
+ //$(function(){
+
+  function drawSD(date) {
+      // body...
+ 
+
+var jsonStr=null;
+var geoCoordMap={};
+var pm25Data=[];
+var pm10Data=[];
+var aqiData=[];
+
+geoCoordMap=dataSD(2).a;
+pm25Data=dataSD(2).c;
+pm10Data=dataSD(2).b;
+aqiData=dataSD(2).d;
+      console.log(pm10Data[6]);
+console.log(geoCoordMap);
+
+ var chart = echarts.init(document.getElementById('mainSD'),'shine');
+option = null;
+
+
+var convertData = function (data) {
+    var res = [];
+    for (var i = 0; i < data.length; i++) {
+        var geoCoord = geoCoordMap[data[i].name];
+        if (geoCoord) {
+            res.push({
+                name: data[i].name,
+                value: geoCoord.concat(data[i].value)
+            });
+        }
+    }
+    return res;
+};
+ console.log(convertData(pm10Data[1]));
+
+
+
+chart.setOption({
+    baseOption:{
+         timeline: {
+            // y: 0,
+            axisType: 'category',
+            // realtime: false,
+            // loop: false,
+            autoPlay: false,
+            // currentIndex: 2,
+            playInterval: 1000,
+            // controlStyle: {
+            //     position: 'left'
+            // },
+            bottom:20,
+            lineStyle:{
+                color:'#fff'
+            },
+            controlStyle:{
+                  normal:{
+                        borderColor:'#fff',
+                        color:'#fff'
+                    
+                }
+             },
+            
+            data: [
+                '2','4','6','8','10','12','14','16','18','20','22','24'
+             ],
+            label: {
+                formatter : function(s) {
+                    return s;
+                },
+                normal:{
+                    textStyle:{
+                        color:'#fff'
+                    }
+                }
+            }
+        },
+        series: [
+        {
+            name: 'pm2.5',
+            type: 'scatter',
+            coordinateSystem: 'geo',
+            roam: true,
+            symbolSize: 10,
+            label: {
+                normal: {
+                    show: false
+                },
+                emphasis: {
+                    show: false
+                }
+            },
+            itemStyle: {
+                emphasis: {
+                    borderColor: '#fff',
+                    borderWidth: 1
+                }
+            }
+        },
+        {
+            name: 'pm10',
+            type: 'scatter',
+            coordinateSystem: 'geo',
+            roam: true,
+            symbolSize: 10,
+            label: {
+                normal: {
+                    show: false
+                },
+                emphasis: {
+                    show: false
+                }
+            },
+            itemStyle: {
+                emphasis: {
+                    borderColor: '#fff',
+                    borderWidth: 1
+                }
+            }
+        },
+        {
+            name: 'AQI',
+            type: 'scatter',
+            coordinateSystem: 'geo',
+            roam: true,
+            symbolSize: 10,
+            label: {
+                normal: {
+                    show: false
+                },
+                emphasis: {
+                    show: false
+                }
+            },
+            itemStyle: {
+                emphasis: {
+                    borderColor: '#fff',
+                    borderWidth: 1
+                }
+            }
+        }
+    ],
+    backgroundColor:'#404a59',
+    tooltip: {
+        trigger: 'item',
+        formatter: function (params) {
+            return params.name + ' : ' + params.value[2];
+        }
+    },
+    title: {
+        text: '全国主要城市空气质量',
+        subtext: '',
+        sublink: 'http://www.pm25.in',
+        x:'center',
+        textStyle: {
+            color: '#fff'
+        }
+    },
+    geo:{
+        map: '山东',
+        roam:true,
+        label: {
+           
+            emphasis: {
+                show: true,
+                 textStyle : {
+                    color : '#28c6de',
+                    fontSize:20
+                    }
+            }
+        },
+        itemStyle: {
+            normal: {
+                areaColor: '#323c48',
+                borderColor: '#111'
+            },
+            emphasis: {
+                areaColor: '#2a333d'
+            }
+        }
+    },
+    legend: {
+        orient: 'vertical',
+        y: 'bottom',
+        x:'right',
+        data:['pm2.5','pm10','AQI'],
+        textStyle: {
+            color: '#fff'
+        },
+        selectedMode: 'single'
+
+    },
+    dataRange: {
+        min: 0,
+        max: 200,
+        calculable: true,
+        color: ['#d94e5d','#eac736','#50a3ba'],
+        textStyle: {
+            color: '#fff'
+        }
+    }
+    },
+    options: [
+            { // 这是'2002-01-01' 对应的 option
+                title: {
+                    text:'山东 2:00'
+                },
+                series: [
+                    {data: convertData(pm25Data[2])},
+                    {data: convertData(pm10Data[2])},
+                    {data: convertData(aqiData[2])}
+                ]
+            }
+             ,
+            { // 这是'2002-01-01' 对应的 option
+                title: {
+                    text: '山东 4:00'
+                },
+                series: [
+                    {data: convertData(pm25Data[4])},
+                    {data: convertData(pm10Data[4])},
+                    {data: convertData(aqiData[4])}
+                ]
+            },
+               { // 这是'2002-01-01' 对应的 option
+                title: {
+                    text: '山东 6:00'
+                },
+                series: [
+                    {data: convertData(pm25Data[6])},
+                    {data: convertData(pm10Data[6])},
+                    {data: convertData(aqiData[6])}
+                ]
+            },
+               { // 这是'2002-01-01' 对应的 option
+                title: {
+                    text: '山东 8:00'
+                },
+                series: [
+                    {data: convertData(pm25Data[8])},
+                    {data: convertData(pm10Data[8])},
+                    {data: convertData(aqiData[8])}
+                ]
+            },
+               { // 这是'2002-01-01' 对应的 option
+                title: {
+                    text: '山东 10:00'
+                },
+                series: [
+                    {data: convertData(pm25Data[10])},
+                    {data: convertData(pm10Data[10])},
+                    {data: convertData(aqiData[10])}
+
+                ]
+            },
+              { // 这是'2002-01-01' 对应的 option
+                title: {
+                    text: '山东 12:00'
+                },
+                series: [
+                    {data: convertData(pm25Data[12])},
+                    {data: convertData(pm10Data[12])},
+                    {data: convertData(aqiData[12])}
+                ]
+            },
+              { // 这是'2002-01-01' 对应的 option
+                title: {
+                    text: '山东 14:00'
+                },
+                series: [
+                    {data: convertData(pm25Data[14])},
+                    {data: convertData(pm10Data[14])},
+                    {data: convertData(aqiData[14])}
+
+                ]
+            },
+              { // 这是'2002-01-01' 对应的 option
+                title: {
+                    text: '山东 16:00'
+                },
+                series: [
+                    {data: convertData(pm25Data[16])},
+                    {data: convertData(pm10Data[16])},
+                    {data: convertData(aqiData[16])}
+                ]
+            },
+              { // 这是'2002-01-01' 对应的 option
+                title: {
+                    text: '山东 18:00'
+                },
+                series: [
+                    {data: convertData(pm25Data[18])},
+                    {data: convertData(pm10Data[18])},
+                    {data: convertData(aqiData[18])}
+                ]
+            },
+              { // 这是'2002-01-01' 对应的 option
+                title: {
+                    text: '山东 20:00'
+                },
+                series: [
+                    {data: convertData(pm25Data[20])},
+                    {data: convertData(pm10Data[20])},
+                    {data: convertData(aqiData[20])}
+                ]
+            },
+              { // 这是'2002-01-01' 对应的 option
+                title: {
+                    text: '山东 22:00'
+                },
+                series: [
+                    {data: convertData(pm25Data[22])},
+                    {data: convertData(pm10Data[22])},
+                    {data: convertData(aqiData[22])}
+                ]
+            },
+              { // 这是'2002-01-01' 对应的 option
+                title: {
+                    text: '山东 24:00'
+                },
+                series: [
+                    {data: convertData(pm25Data[23])},
+                    {data: convertData(pm10Data[23])},
+                    {data: convertData(aqiData[23])}
+                ]
+            }
+        ]
+
+
+ });
+
+
+
+
+
+
+   }
+function drawJS(date) {
+      // body...
+ 
+
+var jsonStr=null;
+var geoCoordMap={};
+var pm25Data=[];
+var pm10Data=[];
+var aqiData=[];
+
+geoCoordMap=dataJS(2).a;
+pm25Data=dataJS(2).c;
+pm10Data=dataJS(2).b;
+aqiData=dataJS(2).d;
+      console.log(pm10Data[6]);
+console.log(geoCoordMap);
+
+ var chart = echarts.init(document.getElementById('mainJS'),'shine');
+option = null;
+
+
+var convertData = function (data) {
+    var res = [];
+    for (var i = 0; i < data.length; i++) {
+        var geoCoord = geoCoordMap[data[i].name];
+        if (geoCoord) {
+            res.push({
+                name: data[i].name,
+                value: geoCoord.concat(data[i].value)
+            });
+        }
+    }
+    return res;
+};
+ console.log(convertData(pm10Data[1]));
+
+
+
+chart.setOption({
+    baseOption:{
+         timeline: {
+            // y: 0,
+            axisType: 'category',
+            // realtime: false,
+            // loop: false,
+            autoPlay: false,
+            // currentIndex: 2,
+            playInterval: 1000,
+            // controlStyle: {
+            //     position: 'left'
+            // },
+            bottom:20,
+            lineStyle:{
+                color:'#fff'
+            },
+            controlStyle:{
+                  normal:{
+                        borderColor:'#fff',
+                        color:'#fff'
+                    
+                }
+             },
+            data: [
+                '2','4','6','8','10','12','14','16','18','20','22','24'
+             ],
+            label: {
+                formatter : function(s) {
+                    return s;
+                },
+                normal:{
+                    textStyle:{
+                        color:'#fff'
+                    }
+                }
+               
+            }
+        },
+        series: [
+        {
+            name: 'pm2.5',
+            type: 'scatter',
+            coordinateSystem: 'geo',
+            roam: true,
+            symbolSize: 10,
+            label: {
+                normal: {
+                    show: false
+                },
+                emphasis: {
+                    show: false
+                }
+            },
+            itemStyle: {
+                emphasis: {
+                    borderColor: '#fff',
+                    borderWidth: 1
+                }
+            }
+        },
+        {
+            name: 'pm10',
+            type: 'scatter',
+            coordinateSystem: 'geo',
+            roam: true,
+            symbolSize: 10,
+            label: {
+                normal: {
+                    show: false
+                },
+                emphasis: {
+                    show: false
+                }
+            },
+            itemStyle: {
+                emphasis: {
+                    borderColor: '#fff',
+                    borderWidth: 1
+                }
+            }
+        },
+        {
+            name: 'AQI',
+            type: 'scatter',
+            coordinateSystem: 'geo',
+            roam: true,
+            symbolSize: 10,
+            label: {
+                normal: {
+                    show: false
+                },
+                emphasis: {
+                    show: false
+                }
+            },
+            itemStyle: {
+                emphasis: {
+                    borderColor: '#fff',
+                    borderWidth: 1
+                }
+            }
+        }
+    ],
+    backgroundColor:'#404a59',
+    tooltip: {
+        trigger: 'item',
+        formatter: function (params) {
+           
+                 return params.name + ' : ' + params.value[2];
+            
+           
+        }
+    },
+    title: {
+        text: '全国主要城市空气质量',
+        subtext: '',
+        sublink: 'http://www.pm25.in',
+        x:'center',
+        textStyle: {
+            color: '#fff'
+        }
+    },
+    geo:{
+        map: '江苏',
+        roam:true,
+        label: {
+           
+            emphasis: {
+                show: true,
+                textStyle : {
+                    color : '#28c6de',
+                    fontSize:20
+                    }
+            }
+        },
+        itemStyle: {
+            normal: {
+                areaColor: '#323c48',
+                borderColor: '#111'
+            },
+            emphasis: {
+                areaColor: '#2a333d'
+            }
+        }
+    },
+    legend: {
+        orient: 'vertical',
+        y: 'bottom',
+        x:'right',
+        data:['pm2.5','pm10','AQI'],
+        textStyle: {
+            color: '#fff'
+        },
+        selectedMode: 'single'
+    },
+    dataRange: {
+        min: 0,
+        max: 200,
+        calculable: true,
+        color: ['#d94e5d','#eac736','#50a3ba'],
+        textStyle: {
+            color: '#fff'
+        }
+    }
+    },
+    options: [
+            { // 这是'2002-01-01' 对应的 option
+                title: {
+                    text:'江苏 2:00'
+                },
+                series: [
+                    {data: convertData(pm25Data[2])},
+                    {data: convertData(pm10Data[2])},
+                    {data: convertData(aqiData[2])}
+                ]
+            }
+             ,
+            { // 这是'2002-01-01' 对应的 option
+                title: {
+                    text: '江苏 4:00'
+                },
+                series: [
+                    {data: convertData(pm25Data[4])},
+                    {data: convertData(pm10Data[4])},
+                    {data: convertData(aqiData[4])}
+                ]
+            },
+               { // 这是'2002-01-01' 对应的 option
+                title: {
+                    text: '江苏 6:00'
+                },
+                series: [
+                    {data: convertData(pm25Data[6])},
+                    {data: convertData(pm10Data[6])},
+                    {data: convertData(aqiData[6])}
+                ]
+            },
+               { // 这是'2002-01-01' 对应的 option
+                title: {
+                    text: '江苏 8:00'
+                },
+                series: [
+                    {data: convertData(pm25Data[8])},
+                    {data: convertData(pm10Data[8])},
+                    {data: convertData(aqiData[8])}
+                ]
+            },
+               { // 这是'2002-01-01' 对应的 option
+                title: {
+                    text: '江苏 10:00'
+                },
+                series: [
+                    {data: convertData(pm25Data[10])},
+                    {data: convertData(pm10Data[10])},
+                    {data: convertData(aqiData[10])}
+                ]
+            },
+              { // 这是'2002-01-01' 对应的 option
+                title: {
+                    text: '江苏 12:00'
+                },
+                series: [
+                    {data: convertData(pm25Data[12])},
+                    {data: convertData(pm10Data[12])},
+                    {data: convertData(aqiData[12])}
+                ]
+            },
+              { // 这是'2002-01-01' 对应的 option
+                title: {
+                    text: '江苏 14:00'
+                },
+                series: [
+                    {data: convertData(pm25Data[14])},
+                    {data: convertData(pm10Data[14])},
+                    {data: convertData(aqiData[14])}
+                ]
+            },
+              { // 这是'2002-01-01' 对应的 option
+                title: {
+                    text: '江苏 16:00'
+                },
+                series: [
+                    {data: convertData(pm25Data[16])},
+                    {data: convertData(pm10Data[16])},
+                    {data: convertData(aqiData[16])}
+                ]
+            },
+              { // 这是'2002-01-01' 对应的 option
+                title: {
+                    text: '江苏 18:00'
+                },
+                series: [
+                    {data: convertData(pm25Data[18])},
+                    {data: convertData(pm10Data[18])},
+                    {data: convertData(aqiData[18])}
+                ]
+            },
+              { // 这是'2002-01-01' 对应的 option
+                title: {
+                    text: '江苏 20:00'
+                },
+                series: [
+                    {data: convertData(pm25Data[20])},
+                    {data: convertData(pm10Data[20])},
+                    {data: convertData(aqiData[20])}
+                ]
+            },
+              { // 这是'2002-01-01' 对应的 option
+                title: {
+                    text: '江苏 22:00'
+                },
+                series: [
+                    {data: convertData(pm25Data[22])},
+                    {data: convertData(pm10Data[22])},
+                    {data: convertData(aqiData[22])}
+                ]
+            },
+              { // 这是'2002-01-01' 对应的 option
+                title: {
+                    text: '江苏 24:00'
+                },
+                series: [
+                    {data: convertData(pm25Data[23])},
+                    {data: convertData(pm10Data[23])},
+                    {data: convertData(aqiData[23])}
+                ]
+            }
+        ]
+
+
+ });
+
+
+
+
+
+
+   }
+
+      
+    </script>
+</body>
+</html>
