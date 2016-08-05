@@ -4,7 +4,7 @@ header("Content-type:text/html;charset:utf-8");
  $conn=mysql_connect("localhost:3306", "root", "");
 
  mysql_query("set names 'utf8'");   
- $sql="SELECT a.lat,a.lng,a.station,b.pm2_5_24h,b.pm10_24h,b.pubtime,b.aqi FROM `airwatch` as b,`airstation` as a   where a.station_code=b.station_code AND a.﻿province='江苏省' AND b.pubtime in  (UNIX_TIMESTAMP('2015-1-".$_REQUEST['t']." 2:0:0'),UNIX_TIMESTAMP('2015-1-".$_REQUEST['t']." 23:0:0'),UNIX_TIMESTAMP('2015-1-".$_REQUEST['t']." 4:0:0'),UNIX_TIMESTAMP('2015-1-".$_REQUEST['t']." 6:0:0'),UNIX_TIMESTAMP('2015-1-".$_REQUEST['t']." 8:0:0'),UNIX_TIMESTAMP('2015-1-".$_REQUEST['t']." 10:0:0'),UNIX_TIMESTAMP('2015-1-".$_REQUEST['t']." 12:0:0'),UNIX_TIMESTAMP('2015-1-".$_REQUEST['t']." 14:0:0'),UNIX_TIMESTAMP('2015-1-".$_REQUEST['t']." 16:0:0'),UNIX_TIMESTAMP('2015-1-".$_REQUEST['t']." 18:0:0'),UNIX_TIMESTAMP('2015-1-".$_REQUEST['t']." 20:0:0'),UNIX_TIMESTAMP('2015-1-".$_REQUEST['t']." 22:0:0'))";         
+ $sql="SELECT a.lat,a.lng,a.station,b.pm2_5_24h,b.pm10_24h,b.pubtime,b.aqi FROM `airwatch` as b,`airstation` as a   where a.station_code=b.station_code AND a.﻿province='江苏省' AND b.pubtime in  ('".$_REQUEST['t']." 23:00:00','".$_REQUEST['t']." 02:00:00','".$_REQUEST['t']." 04:00:00','".$_REQUEST['t']." 06:00:00','".$_REQUEST['t']." 08:00:00','".$_REQUEST['t']." 10:00:00','".$_REQUEST['t']." 12:00:00','".$_REQUEST['t']." 14:00:00','".$_REQUEST['t']." 16:00:00','".$_REQUEST['t']." 18:00:00','".$_REQUEST['t']." 20:00:00','".$_REQUEST['t']." 22:00:00')";         
     
  $result=mysql_db_query("bigdata", $sql, $conn);
     // 获取查询结果

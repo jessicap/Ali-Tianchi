@@ -1,4 +1,5 @@
 function dataSD(t){
+  console.log("t:"+t);
     var jsonStr=null;
      var geoCoordMap = {};
             var pm25Data=[];
@@ -18,11 +19,12 @@ function dataSD(t){
             success:function(res){
                 jsonStr=$.parseJSON(res);
 
-                 //console.log("jsonStr "+jsonStr);
+               //  console.log("jsonStr "+jsonStr);
                  for(var i=0;i<=23;i++){
                 $.each(jsonStr,function(index,item){
                     geoCoordMap[jsonStr[index].station]=[parseFloat(jsonStr[index].lng),parseFloat(jsonStr[index].lat)];
                    dtime=dealtime(jsonStr[index].pubtime);
+                   
                   if(dtime==i){
                     pm10Data.push({
                       name:jsonStr[index].station,
@@ -82,11 +84,12 @@ function dataJS(t){
             success:function(res){
                 jsonStr=$.parseJSON(res);
 
-                 //console.log("jsonStr "+jsonStr);
+               
                  for(var i=0;i<=23;i++){
                 $.each(jsonStr,function(index,item){
                     geoCoordMap[jsonStr[index].station]=[parseFloat(jsonStr[index].lng),parseFloat(jsonStr[index].lat)];
                    dtime=dealtime(jsonStr[index].pubtime);
+
                   if(dtime==i){
                     pm10Data.push({
                       name:jsonStr[index].station,
@@ -127,10 +130,11 @@ function dataJS(t){
      return{a:geoCoordMap,b:pm10time,c:pm25time,d:aqitime}
    };
   function dealtime(time){
-    var unixtime=time;
-  var unixTimestamp = new Date(unixtime* 1000); 
-  var a=unixTimestamp.toTimeString()
+   // var unixtime=time;
+ // var unixTimestamp = new Date(unixtime* 1000); 
+ // var a=unixTimestamp.toTimeString()
   var reg=/.*?(?=[:]+)/
-  var b=a.match(reg);
-  return parseInt(b[0]);  
+  var b=time.split(' ');
+  var c=b[1].match(reg);
+  return parseInt(c);  
   }
